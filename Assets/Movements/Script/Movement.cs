@@ -17,7 +17,9 @@ public class Movement : MonoBehaviour
     public float movespeed = 8f;
 
     public VisualEffect vfxRenderer;
-    
+    public float lightcd = 1f; 
+    public GameObject torch;
+    public float candrop;
     
     
     [Header(("Physics et armes"))]
@@ -50,6 +52,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         canMove = true;
+        candrop = lightcd;
     }
 
     private void Update()
@@ -59,11 +62,28 @@ public class Movement : MonoBehaviour
             moveDirection = playerControls.Land.Move.ReadValue<Vector2>();
         }
         vfxRenderer.SetVector3("PlayerPosition",gameObject.transform.position);
+        if (playerControls.Land.LightOn.IsPressed()&&candrop<=0)
+        {
+            droplight();
+        }
+
+        if (candrop > 0)
+        {
+            candrop -= Time.deltaTime;
+        }
+        
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
             _rb.velocity = new Vector3(moveDirection.x * movespeed,0f,moveDirection.y * movespeed);
+    }
+
+    void droplight()
+    {
+        Quaternion q = new Quaternion(0f,90f,90f,0f);
+        Instantiate(torch,transform.position,q);
+        candrop = lightcd;
     }
 }
