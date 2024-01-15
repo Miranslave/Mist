@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.VFX;
 
 public class Movement : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class Movement : MonoBehaviour
     
     [Header("Parametre du Player")]
     public float movespeed = 8f;
-    
+
+    public VisualEffect vfxRenderer;
     
     
     
@@ -56,7 +58,7 @@ public class Movement : MonoBehaviour
         {
             moveDirection = playerControls.Land.Move.ReadValue<Vector2>();
         }
-        
+        vfxRenderer.SetVector3("PlayerPosition",gameObject.transform.position);
     }
 
     // Update is called once per frame
