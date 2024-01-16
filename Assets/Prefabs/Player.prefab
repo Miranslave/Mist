@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2276846345240882504}
+  - component: {fileID: 1584548741687810527}
   - component: {fileID: 8753496545631969929}
   - component: {fileID: 1482688483605918642}
   - component: {fileID: 5752777671876210924}
@@ -38,6 +39,22 @@ Transform:
   - {fileID: 1192603191777312613}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1584548741687810527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471513985952735876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4147874dc78ecb34f94ed910d965654d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pl: {fileID: 0}
+  torch: {fileID: 0}
+  lightcd: 1
+  candrop: 0
 --- !u!114 &8753496545631969929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52,6 +69,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxRenderer: {fileID: 0}
   lightlife: 0
+  overtimedmg: 0
+  timetick: 0
   radius: 0
 --- !u!114 &1482688483605918642
 MonoBehaviour:
@@ -67,9 +86,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 8
   vfxRenderer: {fileID: 0}
-  lightcd: 1
-  torch: {fileID: 0}
-  candrop: 0
   _rb: {fileID: 5752777671876210924}
   moveDirection: {x: 0, y: 0}
 --- !u!54 &5752777671876210924

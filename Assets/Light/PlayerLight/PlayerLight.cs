@@ -22,16 +22,13 @@ public class PlayerLight : MonoBehaviour
         t = timetick;
         radius = vfxRenderer.GetFloat("RadiusLight");
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    
 
     // Update is called once per frame
     void Update()
     {
+        
+        //Decrease the light by the time passing
         t -=Time.deltaTime;
         if (t <=0f)
         {
@@ -56,7 +53,7 @@ public class PlayerLight : MonoBehaviour
     }
 
     
-    //Player Empower his light consum light faster but radius is stronger
+    //Player Empower his light consume light faster but radius is stronger and don't decrease can't be activated under 25 % light on/off toggle action
     void Empower()
     {
         vfxRenderer.SetFloat("RadiusLight",8f);
