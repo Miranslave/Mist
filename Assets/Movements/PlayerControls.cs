@@ -44,6 +44,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""55dfbb8f-7f77-4a57-a1b7-c0dccc8f6bb9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -178,6 +187,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""LightOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3dcf757f-42ae-49e8-adb2-d61285b58cfc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -188,6 +208,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Land = asset.FindActionMap("Land", throwIfNotFound: true);
         m_Land_Move = m_Land.FindAction("Move", throwIfNotFound: true);
         m_Land_LightOn = m_Land.FindAction("LightOn", throwIfNotFound: true);
+        m_Land_Reload = m_Land.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,12 +272,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<ILandActions> m_LandActionsCallbackInterfaces = new List<ILandActions>();
     private readonly InputAction m_Land_Move;
     private readonly InputAction m_Land_LightOn;
+    private readonly InputAction m_Land_Reload;
     public struct LandActions
     {
         private @PlayerControls m_Wrapper;
         public LandActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Land_Move;
         public InputAction @LightOn => m_Wrapper.m_Land_LightOn;
+        public InputAction @Reload => m_Wrapper.m_Land_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Land; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -272,6 +295,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @LightOn.started += instance.OnLightOn;
             @LightOn.performed += instance.OnLightOn;
             @LightOn.canceled += instance.OnLightOn;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(ILandActions instance)
@@ -282,6 +308,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @LightOn.started -= instance.OnLightOn;
             @LightOn.performed -= instance.OnLightOn;
             @LightOn.canceled -= instance.OnLightOn;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(ILandActions instance)
@@ -303,5 +332,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLightOn(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

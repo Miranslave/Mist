@@ -36,12 +36,14 @@ public class PlayerLight : MonoBehaviour
         if (t <=0f)
         {
             lightlife-= overtimedmg;
-            Debug.Log("Lum tick");
+            //Debug.Log("Lum tick");
             t = timetick;
             Radiuscalculation();
         }
         if (lightlife == 0)
         {
+            //reset temporaire jusqu'a l'ajout des 3 mobs
+            lightlife = 100f;
             Debug.Log("Plus de lumière");
         }
         

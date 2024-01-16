@@ -25,12 +25,15 @@ public class Movement : MonoBehaviour
     [Header(("Physics et armes"))]
     public Rigidbody _rb;
     public Vector2 moveDirection;
+    public PlayerLight Pl;
+    
 
     private Boolean canDash;
     private Boolean isDashing;
     private Boolean isAttacking;
     private Boolean isMoving;
     private Boolean canMove;
+    private Boolean canRest;
 
 
     private void Awake()
@@ -67,6 +70,11 @@ public class Movement : MonoBehaviour
             droplight();
         }
 
+        if (playerControls.Land.Reload.IsPressed()&& canRest)
+        {
+            Debug.Log("Rechargement de la lanterne");
+        }
+
         if (candrop > 0)
         {
             candrop -= Time.deltaTime;
@@ -85,5 +93,26 @@ public class Movement : MonoBehaviour
         Quaternion q = new Quaternion(0f,90f,90f,0f);
         Instantiate(torch,transform.position,q);
         candrop = lightcd;
+    }
+
+    void ReloadLight()
+    {
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("LightRefil"))
+        {
+            canRest = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("LightRefil"))
+        {
+            canRest = false;
+        }
     }
 }
