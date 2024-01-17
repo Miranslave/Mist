@@ -15,34 +15,50 @@ public class PlayerLight : MonoBehaviour
     public float timetick;
     public float radius;
     private float t;
+    public Boolean infog;
     
+    [Header("Debuggage")] public VisualElement v;
+    [SerializeField] private Label l;
+
+    private void Awake()
+    {
+        v = GameObject.FindWithTag("UI").GetComponent<UIDocument>().rootVisualElement;
+        l = v.Q<Label>("Light");
+        l.text = lightlife.ToString();
+    }
 
     private void OnEnable()
     {
         t = timetick;
         radius = vfxRenderer.GetFloat("RadiusLight");
+        infog = true;
     }
     
 
     // Update is called once per frame
     void Update()
     {
-        
-        //Decrease the light by the time passing
-        t -=Time.deltaTime;
-        if (t <=0f)
+        if (infog)
         {
-            lightlife-= overtimedmg;
-            //Debug.Log("Lum tick");
-            t = timetick;
-            Radiuscalculation();
+            //Decrease the light by the time passing
+            t -= Time.deltaTime;
+            if (t <= 0f)
+            {
+                lightlife -= overtimedmg;
+                //Debug.Log("Lum tick");
+                t = timetick;
+                l.text = lightlife.ToString();
+                Radiuscalculation();
+            }
         }
+        l.text = lightlife.ToString();
         if (lightlife == 0)
         {
             //reset temporaire jusqu'a l'ajout des 3 mobs
             lightlife = 100f;
             Debug.Log("Plus de lumière");
         }
+        
         
     }
 

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - LightRefil
+  - UI
   layers:
   - Default
   - TransparentFX
@@ -12,7 +13,7 @@ TagManager:
   - FOV
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 

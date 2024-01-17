@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 public class PlayerAction : MonoBehaviour
@@ -15,11 +16,16 @@ public class PlayerAction : MonoBehaviour
     private Boolean canRest;
     public GameObject torch;
     public float lightcd = 1f;
-    public float candrop;
-    
-    
+    public float healtickrate = 2f;
+    public bool canheal;
+    public bool candrop;
+    public float heal;
+
+    [Header("Debuggage")] public VisualElement v;
+    [SerializeField] private Label l;
     private void Awake()
     {
+
         playerControls = new PlayerControls();
     }
     private void OnEnable()
@@ -35,38 +41,52 @@ public class PlayerAction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        candrop = lightcd;
+        //candrop = lightcd;
+        canheal =false;
+        candrop = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerControls.Land.LightOn.IsPressed()&&candrop<=0)
+        if (playerControls.Land.LightOn.IsPressed()&&candrop)
         {
+            candrop = false;
             droplight();
+            Invoke(nameof(resetlight),lightcd);
         }
 
-        if (playerControls.Land.Reload.IsPressed()&& canRest)
+        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f)
         {
-            Debug.Log("Rechargement de la lanterne");
+            Pl.lightlife += heal;
+            canheal = false;
+            Invoke(nameof(resetheal),healtickrate);
         }
+        
 
-        if (candrop > 0)
-        {
-            candrop -= Time.deltaTime;
-        }
     }
     void droplight()
     {
         Quaternion q = new Quaternion(0f,90f,90f,0f);
         Instantiate(torch,transform.position,q);
-        candrop = lightcd;
+        Pl.lightlife -= 1f;
     }
-    
+
+
+    void resetlight()
+    {
+        candrop = true;
+    }
+
+    void resetheal()
+    {
+        canheal = true;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("LightRefil"))
         {
+            Pl.infog = false;
             canRest = true;
         }
     }
@@ -75,6 +95,7 @@ public class PlayerAction : MonoBehaviour
     {
         if (other.gameObject.CompareTag("LightRefil"))
         {
+            Pl.infog = true;
             canRest = false;
         }
     }
