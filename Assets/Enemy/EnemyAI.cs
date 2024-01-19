@@ -20,6 +20,9 @@ public class Script : MonoBehaviour
     private bool walkPointSet;
 
     public float walkPointRange;
+
+    public bool canbedamaged;
+    public int health=3;
     
     //Attacking
     public float Attackcd;

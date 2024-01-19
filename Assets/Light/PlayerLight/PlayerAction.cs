@@ -7,21 +7,36 @@ using UnityEngine.UIElements;
 
 public class PlayerAction : MonoBehaviour
 {
-    
-    [Header("Controle")]
-    private PlayerControls playerControls;
 
-    [Header("Light actions")]
+    [Header("Controle")] private PlayerControls playerControls;
+
+    [Header("Drop Light action")] 
     public PlayerLight Pl;
-    private Boolean canRest;
     public GameObject torch;
     public float lightcd = 1f;
-    public float healtickrate = 2f;
-    public bool canheal;
     public bool candrop;
-    public float heal;
+    
+    [Header("Heal action")]
+    [SerializeField] private float heal;
+    [SerializeField] private float healtickrate;
 
-    [Header("Debuggage")] public VisualElement v;
+    public float Heal
+    {
+        get => heal;
+        set => heal = value;
+    }
+
+    public float Healtickrate
+    {
+        get => healtickrate;
+        set => healtickrate = value;
+    }
+
+    [SerializeField] private Boolean canRest;
+    [SerializeField] private bool canheal;
+
+    [Header("Debuggage")] 
+    public VisualElement v;
     [SerializeField] private Label l;
     private void Awake()
     {
@@ -59,9 +74,9 @@ public class PlayerAction : MonoBehaviour
         if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f&& canheal)
         {
             // Test light heal 
-            Pl.Heal(heal);
             canheal = false;
-            Invoke(nameof(resetheal),healtickrate);
+            Pl.Heal(Heal);
+            Invoke(nameof(resetheal),Healtickrate);
         }
         
 
