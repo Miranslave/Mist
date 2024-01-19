@@ -23,7 +23,6 @@ public class Movement : MonoBehaviour
     [Header(("Physics et armes"))]
     public Rigidbody _rb;
     public Vector2 moveDirection;
-    public GameObject attackZone;
     
     
 

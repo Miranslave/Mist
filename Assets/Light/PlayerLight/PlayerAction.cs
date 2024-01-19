@@ -9,13 +9,13 @@ public class PlayerAction : MonoBehaviour
 {
 
     [Header("Controle")] private PlayerControls playerControls;
-
+    public Animator anim;
     [Header("Drop Light action")] 
     public PlayerLight Pl;
     public GameObject torch;
     public float lightcd = 1f;
     public bool candrop;
-    
+   
     [Header("Heal action")]
     [SerializeField] private float heal;
     [SerializeField] private float healtickrate;
@@ -42,6 +42,7 @@ public class PlayerAction : MonoBehaviour
     {
 
         playerControls = new PlayerControls();
+        anim = GetComponentInChildren<Animator>();
     }
     private void OnEnable()
     {
@@ -78,8 +79,15 @@ public class PlayerAction : MonoBehaviour
             Pl.Heal(Heal);
             Invoke(nameof(resetheal),Healtickrate);
         }
-        
 
+        if (playerControls.Land.Attack.IsPressed())
+        {
+            anim.SetBool("Attack",true);
+        }
+        else
+        {
+            anim.SetBool("Attack",false);
+        }
     }
     void droplight()
     {
