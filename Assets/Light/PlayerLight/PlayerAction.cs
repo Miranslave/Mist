@@ -42,7 +42,7 @@ public class PlayerAction : MonoBehaviour
     void Start()
     {
         //candrop = lightcd;
-        canheal =false;
+        canheal = true;
         candrop = true;
     }
 
@@ -56,9 +56,10 @@ public class PlayerAction : MonoBehaviour
             Invoke(nameof(resetlight),lightcd);
         }
 
-        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f)
+        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f&& canheal)
         {
-            Pl.lightlife += heal;
+            // Test light heal 
+            Pl.Heal(heal);
             canheal = false;
             Invoke(nameof(resetheal),healtickrate);
         }
@@ -69,6 +70,7 @@ public class PlayerAction : MonoBehaviour
     {
         Quaternion q = new Quaternion(0f,90f,90f,0f);
         Instantiate(torch,transform.position,q);
+        //  negate 1 from player Lightsource might change it to a variable later on 
         Pl.lightlife -= 1f;
     }
 

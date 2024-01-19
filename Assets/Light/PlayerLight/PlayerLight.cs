@@ -73,9 +73,14 @@ public class PlayerLight : MonoBehaviour
     void Empower()
     {
         vfxRenderer.SetFloat("RadiusLight",8f);
+        //vfxRenderer.CreateVFXEventAttribute()
         overtimedmg = overtimedmg * 2;
         // attendre 6 secondes  et remettre le cercle à son ancienne valeur plus baiser les dmg par seconde
     }
 
+    public void Heal(float healvalue)
+    {
+        lightlife += healvalue;
+    }
 
 }
