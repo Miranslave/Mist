@@ -10,25 +10,28 @@ public class Beacon : MonoBehaviour
     public float healtickrate = .5f;
     public float heal;
     public GameObject player;
-    public bool init;
+
+    public bool Activated;
     
     
     // Start is called before the first frame update
     void Start()
     {
-        init = false;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+    
     }
+    
     
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            Activated = true;
             SetPlayerValue(other.gameObject);
         }
     }
@@ -52,8 +55,8 @@ public class Beacon : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            Activated = false;
             player = null;
-            init = false;
         }
     }
 }

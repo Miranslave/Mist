@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 
@@ -14,7 +15,8 @@ public class PlayerAction : MonoBehaviour
     public PlayerLight Pl;
     public GameObject torch;
     public float lightcd = 1f;
-    public bool candrop;
+     public bool canDrop;
+    public Movement playermovement;
    
     [Header("Heal action")]
     [SerializeField] private float heal;
@@ -32,15 +34,15 @@ public class PlayerAction : MonoBehaviour
         set => healtickrate = value;
     }
 
-    [SerializeField] private Boolean canRest;
-    [SerializeField] private bool canheal;
+    [SerializeField] private bool canRest;
+    [SerializeField] private bool canHeal;
+    
 
     [Header("Debuggage")] 
     public VisualElement v;
     [SerializeField] private Label l;
     private void Awake()
     {
-
         playerControls = new PlayerControls();
         anim = GetComponentInChildren<Animator>();
     }
@@ -58,36 +60,30 @@ public class PlayerAction : MonoBehaviour
     void Start()
     {
         //candrop = lightcd;
-        canheal = true;
-        candrop = true;
+        canHeal = true;
+        canDrop = true;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerControls.Land.LightOn.IsPressed()&&candrop)
+        if (playerControls.Land.LightOn.IsPressed()&&canDrop)
         {
-            candrop = false;
+            canDrop = false;
             droplight();
             Invoke(nameof(resetlight),lightcd);
         }
 
-        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f&& canheal)
+        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f&& canHeal)
         {
             // Test light heal 
-            canheal = false;
+            canHeal = false;
             Pl.Heal(Heal);
             Invoke(nameof(resetheal),Healtickrate);
         }
-
-        if (playerControls.Land.Attack.IsPressed())
-        {
-            anim.SetBool("Attack",true);
-        }
-        else
-        {
-            anim.SetBool("Attack",false);
-        }
+        
+        
     }
     void droplight()
     {
@@ -100,13 +96,17 @@ public class PlayerAction : MonoBehaviour
 
     void resetlight()
     {
-        candrop = true;
+        canDrop = true;
     }
 
     void resetheal()
     {
-        canheal = true;
+        anim.SetBool("Attack",false);
+        playermovement.canMove = true;
+        canHeal = true;
     }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("LightRefil"))

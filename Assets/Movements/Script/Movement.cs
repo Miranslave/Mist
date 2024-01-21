@@ -30,7 +30,10 @@ public class Movement : MonoBehaviour
     private Boolean isDashing;
     private Boolean isAttacking;
     private Boolean isMoving;
-    private Boolean canMove;
+    [SerializeField] public Boolean canMove;
+
+
+
     private float smoothtime = 0.1f;
     private float turnsmoothvelocity;
 
@@ -44,7 +47,6 @@ public class Movement : MonoBehaviour
     private void OnEnable()
     {
         playerControls.Enable();
-        Debug.Log(playerControls!=null);
     }
 
     private void OnDisable()
@@ -59,12 +61,36 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        if (canMove)
+        
+        move();
+        if (playerControls.Land.Attack.IsPressed())
         {
-            moveDirection = playerControls.Land.Move.ReadValue<Vector2>();
+            attack();
+        } 
+    }
 
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        if (canMove&&!isAttacking)
+        {
+            _rb.velocity = new Vector3(moveDirection.x * movespeed, 0f, moveDirection.y * movespeed);
+            if (moveDirection != Vector2.zero)
+            {
+                float targetangle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetangle, ref smoothtime,
+                    turnsmoothvelocity);
+                transform.rotation = Quaternion.Euler(0f, targetangle, 0f);
+            }
         }
+      
+            
+        
+    }
 
+    void move()
+    {
+        moveDirection = playerControls.Land.Move.ReadValue<Vector2>();
         if (moveDirection != Vector2.zero)
         {
             isMoving = true;
@@ -77,18 +103,16 @@ public class Movement : MonoBehaviour
         vfxRenderer.SetVector3("PlayerPosition",gameObject.transform.position);
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void attack()
     {
-            _rb.velocity = new Vector3(moveDirection.x * movespeed,0f,moveDirection.y * movespeed);
-            if (moveDirection != Vector2.zero)
-            {
-                float targetangle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetangle, ref smoothtime,
-                    turnsmoothvelocity);
-                transform.rotation = Quaternion.Euler(0f, targetangle, 0f);
-            }
+        _rb.velocity =  Vector3.zero;
+        isAttacking = true;
+        anim.SetTrigger("Attack");
+        Invoke(nameof(Reset),2f);
     }
 
-
+    private void Reset()
+    {
+        isAttacking = false;
+    }
 }
