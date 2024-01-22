@@ -108,7 +108,7 @@ public class Movement : MonoBehaviour
         _rb.velocity =  Vector3.zero;
         isAttacking = true;
         anim.SetTrigger("Attack");
-        Invoke(nameof(Reset),2f);
+        Invoke(nameof(Reset),1f);
     }
 
     private void Reset()

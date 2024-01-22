@@ -15,13 +15,18 @@ public class PlayerAction : MonoBehaviour
     public PlayerLight Pl;
     public GameObject torch;
     public float lightcd = 1f;
-     public bool canDrop;
+    public bool canDrop;
     public Movement playermovement;
    
     [Header("Heal action")]
     [SerializeField] private float heal;
     [SerializeField] private float healtickrate;
-
+    
+    [Header("Interraction")]
+    [SerializeField] private float interractRange;
+    [SerializeField] private float interractCD;
+    [SerializeField] private bool canInterract;
+    [SerializeField] private LayerMask interractMask;
     public float Heal
     {
         get => heal;
@@ -34,7 +39,7 @@ public class PlayerAction : MonoBehaviour
         set => healtickrate = value;
     }
 
-    [SerializeField] private bool canRest;
+    [SerializeField] public bool canRest;
     [SerializeField] private bool canHeal;
     
 
@@ -49,7 +54,7 @@ public class PlayerAction : MonoBehaviour
     private void OnEnable()
     {
         playerControls.Enable();
-        Debug.Log(playerControls!=null);
+        //Debug.Log(playerControls!=null);
     }
 
     private void OnDisable()
@@ -62,7 +67,8 @@ public class PlayerAction : MonoBehaviour
         //candrop = lightcd;
         canHeal = true;
         canDrop = true;
-        
+        canInterract = true;
+
     }
 
     // Update is called once per frame
@@ -75,12 +81,24 @@ public class PlayerAction : MonoBehaviour
             Invoke(nameof(resetlight),lightcd);
         }
 
-        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f&& canHeal)
+        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f && canHeal)
         {
             // Test light heal 
             canHeal = false;
             Pl.Heal(Heal);
             Invoke(nameof(resetheal),Healtickrate);
+        }
+
+        if (playerControls.Land.Interract.IsPressed()&&canInterract)
+        {
+           Collider[] colliders = Physics.OverlapSphere(transform.position, interractRange,interractMask);
+            foreach(var collider in colliders)
+            {
+                Beacon b = collider.gameObject.GetComponent<Beacon>();
+                b.setActive(this.gameObject);
+            }
+            canInterract = false;
+            Invoke(nameof(resetInterract),interractCD);
         }
         
         
@@ -106,13 +124,19 @@ public class PlayerAction : MonoBehaviour
         canHeal = true;
     }
 
+    void resetInterract()
+    {
+        canInterract = true;
+    }
 
+
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("LightRefil"))
         {
-            Pl.infog = false;
-            canRest = true;
+            //Pl.infog = false;
+            //canRest = true;
         }
     }
 
@@ -120,8 +144,8 @@ public class PlayerAction : MonoBehaviour
     {
         if (other.gameObject.CompareTag("LightRefil"))
         {
-            Pl.infog = true;
-            canRest = false;
+            //Pl.infog = true;
+            //canRest = false;
         }
     }
 }

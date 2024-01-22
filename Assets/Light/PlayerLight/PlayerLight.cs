@@ -48,7 +48,7 @@ public class PlayerLight : MonoBehaviour
                 //Debug.Log("Lum tick");
                 t = timetick;
                 l.text = lightlife.ToString();
-                Radiuscalculation();
+                
             }
         }
         l.text = lightlife.ToString();
@@ -58,8 +58,7 @@ public class PlayerLight : MonoBehaviour
             lightlife = 100f;
             Debug.Log("Plus de lumière");
         }
-        
-        
+        Radiuscalculation();
     }
 
     // Recalcule le cercle de protection en fonction du pourcentage de lumière restant
