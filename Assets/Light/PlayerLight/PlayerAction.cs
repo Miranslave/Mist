@@ -46,6 +46,8 @@ public class PlayerAction : MonoBehaviour
     [Header("Debuggage")] 
     public VisualElement v;
     [SerializeField] private Label l;
+    
+    
     private void Awake()
     {
         playerControls = new PlayerControls();

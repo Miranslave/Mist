@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-public class Script : MonoBehaviour
+public class EnemyAIScript : MonoBehaviour
 {
 
     public NavMeshAgent agent;
@@ -32,18 +32,17 @@ public class Script : MonoBehaviour
     public float sightRange, attackRange;
 
     public bool playerInSightRange, playerInAttackRange;
-    // Start is called before the first frame update
+   
 
+    
+    
     private void Awake()
     {
         playertf = GameObject.FindWithTag("Player").transform;
         agent.GetComponent<NavMeshAgent>();
     }
 
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
@@ -51,9 +50,10 @@ public class Script : MonoBehaviour
         //Check for sight range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange,thePlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, thePlayer);
-        if(!playerInAttackRange && !playerInSightRange) Patroling();
+        if(!playerInAttackRange && !playerInSightRange)Patroling();
         if(!playerInAttackRange && playerInSightRange)Chasing();
         if(playerInAttackRange && playerInSightRange)Attacking();
+        inFog();
     }
 
     private void Patroling()
@@ -89,5 +89,32 @@ public class Script : MonoBehaviour
     private void Attacking()
     {
         // aTtack
+        agent.SetDestination(transform.position);
+        transform.LookAt(playertf);
+    }
+
+    public void Damage(int dmg)
+    {
+        if (canbedamaged)
+        {
+            health = health - dmg;
+            if (health <= 0)
+            {
+                this.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void inFog()
+    {
+        Vector3 distanceToPlayer = transform.position - playertf.position;
+        if (distanceToPlayer.magnitude < 2f)
+        {
+            canbedamaged = true;
+        }
+        else
+        {
+            canbedamaged = false;
+        }
     }
 }

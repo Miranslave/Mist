@@ -23,6 +23,9 @@ public class Movement : MonoBehaviour
     [Header(("Physics et armes"))]
     public Rigidbody _rb;
     public Vector2 moveDirection;
+    public Transform attackPoint;
+    public float attackRange;
+    public LayerMask enemyLayer;
     
     
 
@@ -63,7 +66,7 @@ public class Movement : MonoBehaviour
     {
         
         move();
-        if (playerControls.Land.Attack.IsPressed())
+        if (playerControls.Land.Attack.IsPressed()&&!isAttacking)
         {
             attack();
         } 
@@ -108,7 +111,15 @@ public class Movement : MonoBehaviour
         _rb.velocity =  Vector3.zero;
         isAttacking = true;
         anim.SetTrigger("Attack");
-        Invoke(nameof(Reset),1f);
+        Collider[] hitenemys = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayer);
+        foreach (var enemy in hitenemys)
+        {
+            Debug.Log("We hit"+ enemy.gameObject.name);
+            EnemyAIScript enemyAIScript = enemy.gameObject.GetComponent<EnemyAIScript>();
+            enemyAIScript.Damage(1);
+        }
+        
+        Invoke(nameof(Reset),0.2f);
     }
 
     private void Reset()
