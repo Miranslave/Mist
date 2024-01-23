@@ -1,45 +1,52 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class EnemyAIScript : MonoBehaviour
 {
-
+    [Header("IANav")]
     public NavMeshAgent agent;
-
     public Transform playertf;
-
     public LayerMask theGround, thePlayer;
-    //Patroling
-
+    
+    
+    [Header("Patroling")]
     public Vector3 walkpoint;
-
     private bool walkPointSet;
-
     public float walkPointRange;
-
     public bool canbedamaged;
     public int health=3;
+    public bool damaged;
     
-    //Attacking
-    public float Attackcd;
-
+    
+    [Header("Attacking")]
+    public float attackCd;
     private bool attacked;
-    //States
+    public int AttackDmg;
+    public Transform attackpoint;
+    
+    [Header("Animation")]
+    public Animator anim;
+    public String speed;
+    
+    [Header("States")]
     public float sightRange, attackRange;
-
     public bool playerInSightRange, playerInAttackRange;
-   
+    
 
     
     
     private void Awake()
     {
+        speed = "Walking";
+        anim = this.gameObject.GetComponent<Animator>();
         playertf = GameObject.FindWithTag("Player").transform;
         agent.GetComponent<NavMeshAgent>();
+        
     }
 
 
@@ -48,16 +55,20 @@ public class EnemyAIScript : MonoBehaviour
     void Update()
     {
         //Check for sight range
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange,thePlayer);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, thePlayer);
-        if(!playerInAttackRange && !playerInSightRange)Patroling();
-        if(!playerInAttackRange && playerInSightRange)Chasing();
-        if(playerInAttackRange && playerInSightRange)Attacking();
-        inFog();
+        if (!damaged)
+        {
+            playerInSightRange = Physics.CheckSphere(transform.position, sightRange, thePlayer);
+            playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, thePlayer);
+            if (!playerInAttackRange && !playerInSightRange) Patroling();
+            if (!playerInAttackRange && playerInSightRange) Chasing();
+            if (playerInAttackRange && playerInSightRange) Attacking();
+            inFog();
+        }
     }
 
     private void Patroling()
     {
+        anim.SetBool(speed,true);
         if(!walkPointSet) SearchWalkPoint();
         if (walkPointSet)
         {
@@ -84,24 +95,83 @@ public class EnemyAIScript : MonoBehaviour
     }
     private void Chasing()
     {
+        anim.SetBool(speed,true);
         agent.SetDestination(playertf.position);
     }
+    
     private void Attacking()
     {
-        // aTtack
-        agent.SetDestination(transform.position);
-        transform.LookAt(playertf);
+        if (!attacked)
+        {
+            agent.SetDestination(transform.position);
+            int a = 1;//Random.Range(0, 1);
+            switch (a)
+            {
+                default:
+                    break;
+
+                case 0:
+                    push();
+                    break;
+
+                case 1:
+                    punch();
+                    break;
+            }
+        }
     }
 
+    // a bit bugged
+    private void push()
+    {
+        attacked = true;
+        Collider[] playerhit = Physics.OverlapSphere(attackpoint.position,attackRange,thePlayer);
+        foreach (var check in playerhit)
+        {
+            Rigidbody playerRb =check.gameObject.GetComponent<Rigidbody>();
+            // no push upward or we go to the sky lol 
+            Vector3 pushdir = new Vector3(playerRb.transform.position.x-transform.position.x,0,playerRb.transform.position.z-transform.position.z);
+            Debug.Log(pushdir);
+            playerRb.AddForce(pushdir,ForceMode.Impulse);
+            
+        }
+        agent.SetDestination(transform.position);
+        Invoke(nameof(resetAttack),attackCd);
+    }
+
+    // work fine
+    private void punch()
+    {
+        anim.SetTrigger("Attacking");
+        attacked = true;
+        Collider[] playerhit = Physics.OverlapSphere(attackpoint.position,attackRange,thePlayer);
+        foreach (var check in playerhit)
+        {
+            check.gameObject.GetComponent<PlayerLight>().Damage(AttackDmg);
+        }
+        agent.SetDestination(transform.position);
+        Invoke(nameof(resetAttack),attackCd);
+    }
     public void Damage(int dmg)
     {
         if (canbedamaged)
         {
+            anim.SetTrigger("Hitted");
             health = health - dmg;
+            //if enemy low they want to kill you harder
+            if (health == 1)
+            {
+                anim.SetBool(speed,false);
+                speed = "Sprint";
+                agent.speed = agent.speed * 2; 
+            }
             if (health <= 0)
             {
                 this.gameObject.SetActive(false);
             }
+
+            damaged = true;
+            Invoke(nameof(resetDamaged), 1f);
         }
     }
 
@@ -110,11 +180,22 @@ public class EnemyAIScript : MonoBehaviour
         Vector3 distanceToPlayer = transform.position - playertf.position;
         if (distanceToPlayer.magnitude < 2f)
         {
+            agent.speed = 1f; 
             canbedamaged = true;
         }
         else
         {
             canbedamaged = false;
         }
+    }
+
+    public void resetAttack()
+    {
+        attacked = false;
+    }
+
+    public void resetDamaged()
+    {
+        damaged = false;
     }
 }

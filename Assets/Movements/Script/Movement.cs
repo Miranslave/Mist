@@ -16,7 +16,6 @@ public class Movement : MonoBehaviour
     [Header("Parametre du Player")]
     public float movespeed = 8f;
     public VisualEffect vfxRenderer;
-
     public Animator anim;
     
     
@@ -28,11 +27,9 @@ public class Movement : MonoBehaviour
     public LayerMask enemyLayer;
     
     
-
-    private Boolean canDash;
-    private Boolean isDashing;
-    private Boolean isAttacking;
-    private Boolean isMoving;
+    [Header("Boolean to check the state")]
+    [SerializeField]private Boolean isAttacking;
+    [SerializeField]private Boolean isMoving;
     [SerializeField] public Boolean canMove;
 
 
@@ -114,12 +111,12 @@ public class Movement : MonoBehaviour
         Collider[] hitenemys = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayer);
         foreach (var enemy in hitenemys)
         {
-            Debug.Log("We hit"+ enemy.gameObject.name);
+            //Debug.Log("We hit"+ enemy.gameObject.name);
             EnemyAIScript enemyAIScript = enemy.gameObject.GetComponent<EnemyAIScript>();
             enemyAIScript.Damage(1);
         }
         
-        Invoke(nameof(Reset),0.2f);
+        Invoke(nameof(Reset),0.8f);
     }
 
     private void Reset()

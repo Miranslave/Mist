@@ -55,14 +55,18 @@ public class Beacon : MonoBehaviour
             }
     }
 
-    public void setActive(GameObject g)
+    public void Activate(GameObject g)
     {
         Activated = true;
         if (g.CompareTag("Player"))
         {
             player = g;
             PlayerLight pLight = player.gameObject.GetComponent<PlayerLight>();
+            PlayerAction pAction = player.GetComponent<PlayerAction>();
             pLight.infog = false;
+            pAction.canRest = true;
+            pAction.Healtickrate = healtickrate;
+            pAction.Heal = heal;
         }
         fire.SetActive(true);
         

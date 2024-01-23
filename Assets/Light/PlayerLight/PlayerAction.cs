@@ -97,7 +97,7 @@ public class PlayerAction : MonoBehaviour
             foreach(var collider in colliders)
             {
                 Beacon b = collider.gameObject.GetComponent<Beacon>();
-                b.setActive(this.gameObject);
+                b.Activate(this.gameObject);
             }
             canInterract = false;
             Invoke(nameof(resetInterract),interractCD);
@@ -132,7 +132,7 @@ public class PlayerAction : MonoBehaviour
     }
 
 
-    
+    /*
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("LightRefil"))
@@ -149,5 +149,5 @@ public class PlayerAction : MonoBehaviour
             //Pl.infog = true;
             //canRest = false;
         }
-    }
+    }*/
 }

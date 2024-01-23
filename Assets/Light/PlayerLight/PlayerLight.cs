@@ -82,4 +82,15 @@ public class PlayerLight : MonoBehaviour
         lightlife += healvalue;
     }
 
+    public void Damage(int dmg)
+    {
+        lightlife = lightlife - dmg;
+        if (lightlife < 0f)
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
+    
+    
+
 }

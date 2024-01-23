@@ -16,8 +16,8 @@ TagManager:
   - Player
   - PostPro
   - Interractable
-  - 
-  - 
+  - Enemy
+  - Destructible
   - 
   - 
   - 
