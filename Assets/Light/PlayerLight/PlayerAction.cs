@@ -83,7 +83,7 @@ public class PlayerAction : MonoBehaviour
             Invoke(nameof(resetlight),lightcd);
         }
 
-        if (playerControls.Land.Reload.IsPressed()&& canRest && Pl.lightlife <100f && canHeal)
+        if ( canRest && Pl.lightlife <100f && canHeal)
         {
             // Test light heal 
             canHeal = false;
@@ -96,8 +96,10 @@ public class PlayerAction : MonoBehaviour
            Collider[] colliders = Physics.OverlapSphere(transform.position, interractRange,interractMask);
             foreach(var collider in colliders)
             {
+                
                 Beacon b = collider.gameObject.GetComponent<Beacon>();
-                b.Activate(this.gameObject);
+                Debug.Log(b);
+                b.Activate(gameObject);
             }
             canInterract = false;
             Invoke(nameof(resetInterract),interractCD);

@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1482688483605918642}
   - component: {fileID: 5752777671876210924}
   - component: {fileID: 8892298469628340369}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player_proto
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,10 +80,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vfxRenderer: {fileID: 0}
-  lightlife: 0
-  overtimedmg: 0
-  timetick: 0
-  radius: 0
+  lightlife: 100
+  overtimedmg: 1
+  timetick: 2
+  radius: 5
   infog: 0
 --- !u!114 &1482688483605918642
 MonoBehaviour:
@@ -99,10 +99,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 8
   vfxRenderer: {fileID: 0}
-  anim: {fileID: 0}
+  anim: {fileID: 5712191873551434144}
   _rb: {fileID: 5752777671876210924}
   moveDirection: {x: 0, y: 0}
   attackPoint: {fileID: 3064829905689651011}
+  attackRange: 0
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isAttacking: 0
+  isMoving: 0
   canMove: 0
 --- !u!54 &5752777671876210924
 Rigidbody:
@@ -363,5 +369,10 @@ PrefabInstance:
 --- !u!4 &283082838825417206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7558518351818488169, guid: 52f66c032d4e7824a8d6f264e653dcc1, type: 3}
+  m_PrefabInstance: {fileID: 7712685062895681695}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5712191873551434144 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2615815188048494911, guid: 52f66c032d4e7824a8d6f264e653dcc1, type: 3}
   m_PrefabInstance: {fileID: 7712685062895681695}
   m_PrefabAsset: {fileID: 0}
