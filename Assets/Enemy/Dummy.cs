@@ -5,45 +5,42 @@ using UnityEngine;
 public class Dummy : MonoBehaviour
 {
     public int health;
-
+    public Animator anim;
+    
     public float respawntime;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         health = 3;
-        
+        anim = this.gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (health == 0)
-        {
-            this.gameObject.SetActive(true);
-            health = 3;
-        }
+        
     }
     
     public void Damage(int dmg)
     {
-
-            anim.SetTrigger("Hitted");
+        Debug.Log("Hit");
+            anim.SetTrigger("Hit");
             health = health - dmg;
             if (health <= 0)
             {
                 this.gameObject.SetActive(false);
+                Invoke(nameof(Respawn), respawntime);
             }
-            else
-            {
-                damaged = true;
-                Invoke(nameof(resetDamaged), 1f);
-            }
-         
         
     }
-    
-    public void resetDamaged()
+
+    private void Respawn()
     {
-        damaged = false;
+        health = 3;
+        this.gameObject.SetActive(true);
     }
+    
+ 
 }
